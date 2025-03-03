@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ZufangOrderDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.zufang_order_uuid_number as zufangOrderUuidNumber
+        ,a.zufang_id as zufangId
+        ,a.yonghu_id as yonghuId
+        ,a.zufang_order_name as zufangOrderName
+        ,a.zufang_order_phone as zufangOrderPhone
+        ,a.insert_time as insertTime
+        ,a.kanfang_time as kanfangTime
+        ,a.zufang_order_yesno_types as zufangOrderYesnoTypes
+        ,a.zufang_order_yesno_text as zufangOrderYesnoText
+        ,a.zufang_order_shenhe_time as zufangOrderShenheTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ZufangOrderView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+        ,yonghu.yonghu_name as yonghuName
+        ,yonghu.yonghu_phone as yonghuPhone
+        ,yonghu.yonghu_id_number as yonghuIdNumber
+        ,yonghu.yonghu_photo as yonghuPhoto
+        ,yonghu.yonghu_email as yonghuEmail
+        ,zufang.yonghu_id as zufangYonghuId
+        ,zufang.zufang_name as zufangName
+        ,zufang.zufang_uuid_number as zufangUuidNumber
+        ,zufang.zufang_photo as zufangPhoto
+        ,zufang.zufang_types as zufangTypes
+        ,zufang.quyu_types as quyuTypes
+        ,zufang.zufang_xiaoqu as zufangXiaoqu
+        ,zufang.zufang_weizhi as zufangWeizhi
+        ,zufang.zufang_mianji as zufangMianji
+        ,zufang.zufang_old_money as zufangOldMoney
+        ,zufang.zufang_new_money as zufangNewMoney
+        ,zufang.zufang_clicknum as zufangClicknum
+        ,zufang.zufang_content as zufangContent
+        ,zufang.zufang_zhuangtai_types as zufangZhuangtaiTypes
+        ,zufang.shangxia_types as shangxiaTypes
+        ,zufang.zufang_delete as zufangDelete
+
+        FROM zufang_order  a
+        left JOIN yonghu yonghu ON a.yonghu_id = yonghu.id
+        left JOIN zufang zufang ON a.zufang_id = zufang.id
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.zufangOrderUuidNumber != '' and params.zufangOrderUuidNumber != null and params.zufangOrderUuidNumber != 'null' ">
+                and a.zufang_order_uuid_number like CONCAT('%',#{params.zufangOrderUuidNumber},'%')
+            </if>
+            <if test="params.zufangId != null and params.zufangId != ''">
+                and (
+                    a.zufang_id = #{params.zufangId}
+                )
+            </if>
+            <if test="params.yonghuId != null and params.yonghuId != ''">
+                and (
+                    a.yonghu_id = #{params.yonghuId}
+                    or zufang.yonghu_id = #{params.yonghuId}
+                )
+            </if>
+            <if test=" params.zufangOrderName != '' and params.zufangOrderName != null and params.zufangOrderName != 'null' ">
+                and a.zufang_order_name like CONCAT('%',#{params.zufangOrderName},'%')
+            </if>
+            <if test=" params.zufangOrderPhone != '' and params.zufangOrderPhone != null and params.zufangOrderPhone != 'null' ">
+                and a.zufang_order_phone like CONCAT('%',#{params.zufangOrderPhone},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test=" params.kanfangTimeStart != '' and params.kanfangTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.kanfang_time) >= UNIX_TIMESTAMP(#{params.kanfangTimeStart}) ]]>
+            </if>
+            <if test=" params.kanfangTimeEnd != '' and params.kanfangTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.kanfang_time) <= UNIX_TIMESTAMP(#{params.kanfangTimeEnd}) ]]>
+            </if>
+            <if test="params.zufangOrderYesnoTypes != null and params.zufangOrderYesnoTypes != ''">
+                and a.zufang_order_yesno_types = #{params.zufangOrderYesnoTypes}
+            </if>
+            <if test=" params.zufangOrderYesnoText != '' and params.zufangOrderYesnoText != null and params.zufangOrderYesnoText != 'null' ">
+                and a.zufang_order_yesno_text like CONCAT('%',#{params.zufangOrderYesnoText},'%')
+            </if>
+            <if test=" params.zufangOrderShenheTimeStart != '' and params.zufangOrderShenheTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.zufang_order_shenhe_time) >= UNIX_TIMESTAMP(#{params.zufangOrderShenheTimeStart}) ]]>
+            </if>
+            <if test=" params.zufangOrderShenheTimeEnd != '' and params.zufangOrderShenheTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.zufang_order_shenhe_time) <= UNIX_TIMESTAMP(#{params.zufangOrderShenheTimeEnd}) ]]>
+            </if>
+
+                <!-- 判断用户的id不为空 -->
+            <if test=" params.yonghuIdNotNull != '' and params.yonghuIdNotNull != null and params.yonghuIdNotNull != 'null' ">
+                and a.yonghu_id IS NOT NULL
+            </if>
+            <if test=" params.yonghuName != '' and params.yonghuName != null and params.yonghuName != 'null' ">
+                and yonghu.yonghu_name like CONCAT('%',#{params.yonghuName},'%')
+            </if>
+            <if test=" params.yonghuPhone != '' and params.yonghuPhone != null and params.yonghuPhone != 'null' ">
+                and yonghu.yonghu_phone like CONCAT('%',#{params.yonghuPhone},'%')
+            </if>
+            <if test=" params.yonghuIdNumber != '' and params.yonghuIdNumber != null and params.yonghuIdNumber != 'null' ">
+                and yonghu.yonghu_id_number like CONCAT('%',#{params.yonghuIdNumber},'%')
+            </if>
+            <if test=" params.yonghuEmail != '' and params.yonghuEmail != null and params.yonghuEmail != 'null' ">
+                and yonghu.yonghu_email like CONCAT('%',#{params.yonghuEmail},'%')
+            </if>
+                <!-- 判断租房的id不为空 -->
+            <if test=" params.zufangIdNotNull != '' and params.zufangIdNotNull != null and params.zufangIdNotNull != 'null' ">
+                and a.zufang_id IS NOT NULL
+            </if>
+            <if test=" params.zufangName != '' and params.zufangName != null and params.zufangName != 'null' ">
+                and zufang.zufang_name like CONCAT('%',#{params.zufangName},'%')
+            </if>
+            <if test=" params.zufangUuidNumber != '' and params.zufangUuidNumber != null and params.zufangUuidNumber != 'null' ">
+                and zufang.zufang_uuid_number like CONCAT('%',#{params.zufangUuidNumber},'%')
+            </if>
+            <if test="params.zufangTypes != null  and params.zufangTypes != ''">
+                and zufang.zufang_types = #{params.zufangTypes}
+            </if>
+
+            <if test="params.quyuTypes != null  and params.quyuTypes != ''">
+                and zufang.quyu_types = #{params.quyuTypes}
+            </if>
+
+            <if test=" params.zufangXiaoqu != '' and params.zufangXiaoqu != null and params.zufangXiaoqu != 'null' ">
+                and zufang.zufang_xiaoqu like CONCAT('%',#{params.zufangXiaoqu},'%')
+            </if>
+            <if test=" params.zufangWeizhi != '' and params.zufangWeizhi != null and params.zufangWeizhi != 'null' ">
+                and zufang.zufang_weizhi like CONCAT('%',#{params.zufangWeizhi},'%')
+            </if>
+            <if test="params.zufangMianjiStart != null ">
+                <![CDATA[  and zufang.zufang_mianji >= #{params.zufangMianjiStart}   ]]>
+            </if>
+            <if test="params.zufangMianjiEnd != null ">
+                <![CDATA[  and zufang.zufang_mianji <= #{params.zufangMianjiEnd}   ]]>
+            </if>
+            <if test="params.zufangOldMoneyStart != null ">
+                <![CDATA[  and zufang.zufang_old_money >= #{params.zufangOldMoneyStart}   ]]>
+            </if>
+            <if test="params.zufangOldMoneyEnd != null ">
+                <![CDATA[  and zufang.zufang_old_money <= #{params.zufangOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.zufangNewMoneyStart != null ">
+                <![CDATA[  and zufang.zufang_new_money >= #{params.zufangNewMoneyStart}   ]]>
+            </if>
+            <if test="params.zufangNewMoneyEnd != null ">
+                <![CDATA[  and zufang.zufang_new_money <= #{params.zufangNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.zufangClicknumStart != null  and params.zufangClicknumStart != '' ">
+                <![CDATA[  and zufang.zufang_clicknum >= #{params.zufangClicknumStart}   ]]>
+            </if>
+            <if test="params.zufangClicknumEnd != null  and params.zufangClicknumEnd != '' ">
+                <![CDATA[  and zufang.zufang_clicknum <= #{params.zufangClicknumEnd}   ]]>
+            </if>
+            <if test="params.zufangClicknum != null  and params.zufangClicknum != '' ">
+                and zufang.zufang_clicknum = #{params.zufangClicknum}
+            </if>
+            <if test=" params.zufangContent != '' and params.zufangContent != null and params.zufangContent != 'null' ">
+                and zufang.zufang_content like CONCAT('%',#{params.zufangContent},'%')
+            </if>
+            <if test="params.zufangZhuangtaiTypes != null  and params.zufangZhuangtaiTypes != ''">
+                and zufang.zufang_zhuangtai_types = #{params.zufangZhuangtaiTypes}
+            </if>
+
+            <if test="params.shangxiaTypes != null  and params.shangxiaTypes != ''">
+                and zufang.shangxia_types = #{params.shangxiaTypes}
+            </if>
+
+            <if test="params.zufangDeleteStart != null  and params.zufangDeleteStart != '' ">
+                <![CDATA[  and zufang.zufang_delete >= #{params.zufangDeleteStart}   ]]>
+            </if>
+            <if test="params.zufangDeleteEnd != null  and params.zufangDeleteEnd != '' ">
+                <![CDATA[  and zufang.zufang_delete <= #{params.zufangDeleteEnd}   ]]>
+            </if>
+            <if test="params.zufangDelete != null  and params.zufangDelete != '' ">
+                and zufang.zufang_delete = #{params.zufangDelete}
+            </if>
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>

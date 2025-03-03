@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ChushoufangwuLiuyanDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.chushoufangwu_id as chushoufangwuId
+        ,a.yonghu_id as yonghuId
+        ,a.chushoufangwu_liuyan_text as chushoufangwuLiuyanText
+        ,a.insert_time as insertTime
+        ,a.reply_text as replyText
+        ,a.update_time as updateTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ChushoufangwuLiuyanView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+        ,chushoufangwu.yonghu_id as chushoufangwuYonghuId
+        ,chushoufangwu.chushoufangwu_name as chushoufangwuName
+        ,chushoufangwu.chushoufangwu_uuid_number as chushoufangwuUuidNumber
+        ,chushoufangwu.chushoufangwu_photo as chushoufangwuPhoto
+        ,chushoufangwu.chushoufangwu_types as chushoufangwuTypes
+        ,chushoufangwu.chushoufangwu_xinjiu_types as chushoufangwuXinjiuTypes
+        ,chushoufangwu.quyu_types as quyuTypes
+        ,chushoufangwu.chushoufangwu_xiaoqu as chushoufangwuXiaoqu
+        ,chushoufangwu.chushoufangwu_weizhi as chushoufangwuWeizhi
+        ,chushoufangwu.chushoufangwu_mianji as chushoufangwuMianji
+        ,chushoufangwu.chushoufangwu_old_money as chushoufangwuOldMoney
+        ,chushoufangwu.chushoufangwu_new_money as chushoufangwuNewMoney
+        ,chushoufangwu.chushoufangwu_clicknum as chushoufangwuClicknum
+        ,chushoufangwu.chushoufangwu_content as chushoufangwuContent
+        ,chushoufangwu.chushoufangwu_zhuangtai_types as chushoufangwuZhuangtaiTypes
+        ,chushoufangwu.shangxia_types as shangxiaTypes
+        ,chushoufangwu.chushoufangwu_delete as chushoufangwuDelete
+        ,yonghu.yonghu_name as yonghuName
+        ,yonghu.yonghu_phone as yonghuPhone
+        ,yonghu.yonghu_id_number as yonghuIdNumber
+        ,yonghu.yonghu_photo as yonghuPhoto
+        ,yonghu.yonghu_email as yonghuEmail
+
+        FROM chushoufangwu_liuyan  a
+        left JOIN chushoufangwu chushoufangwu ON a.chushoufangwu_id = chushoufangwu.id
+        left JOIN yonghu yonghu ON a.yonghu_id = yonghu.id
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="params.chushoufangwuId != null and params.chushoufangwuId != ''">
+                and (
+                    a.chushoufangwu_id = #{params.chushoufangwuId}
+                )
+            </if>
+            <if test="params.yonghuId != null and params.yonghuId != ''">
+                and (
+                    a.yonghu_id = #{params.yonghuId}
+                    or chushoufangwu.yonghu_id = #{params.yonghuId}
+                )
+            </if>
+            <if test=" params.chushoufangwuLiuyanText != '' and params.chushoufangwuLiuyanText != null and params.chushoufangwuLiuyanText != 'null' ">
+                and a.chushoufangwu_liuyan_text like CONCAT('%',#{params.chushoufangwuLiuyanText},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test=" params.replyText != '' and params.replyText != null and params.replyText != 'null' ">
+                and a.reply_text like CONCAT('%',#{params.replyText},'%')
+            </if>
+            <if test=" params.updateTimeStart != '' and params.updateTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.update_time) >= UNIX_TIMESTAMP(#{params.updateTimeStart}) ]]>
+            </if>
+            <if test=" params.updateTimeEnd != '' and params.updateTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.update_time) <= UNIX_TIMESTAMP(#{params.updateTimeEnd}) ]]>
+            </if>
+
+                <!-- 判断出售房屋的id不为空 -->
+            <if test=" params.chushoufangwuIdNotNull != '' and params.chushoufangwuIdNotNull != null and params.chushoufangwuIdNotNull != 'null' ">
+                and a.chushoufangwu_id IS NOT NULL
+            </if>
+            <if test=" params.chushoufangwuName != '' and params.chushoufangwuName != null and params.chushoufangwuName != 'null' ">
+                and chushoufangwu.chushoufangwu_name like CONCAT('%',#{params.chushoufangwuName},'%')
+            </if>
+            <if test=" params.chushoufangwuUuidNumber != '' and params.chushoufangwuUuidNumber != null and params.chushoufangwuUuidNumber != 'null' ">
+                and chushoufangwu.chushoufangwu_uuid_number like CONCAT('%',#{params.chushoufangwuUuidNumber},'%')
+            </if>
+            <if test="params.chushoufangwuTypes != null  and params.chushoufangwuTypes != ''">
+                and chushoufangwu.chushoufangwu_types = #{params.chushoufangwuTypes}
+            </if>
+
+            <if test="params.chushoufangwuXinjiuTypes != null  and params.chushoufangwuXinjiuTypes != ''">
+                and chushoufangwu.chushoufangwu_xinjiu_types = #{params.chushoufangwuXinjiuTypes}
+            </if>
+
+            <if test="params.quyuTypes != null  and params.quyuTypes != ''">
+                and chushoufangwu.quyu_types = #{params.quyuTypes}
+            </if>
+
+            <if test=" params.chushoufangwuXiaoqu != '' and params.chushoufangwuXiaoqu != null and params.chushoufangwuXiaoqu != 'null' ">
+                and chushoufangwu.chushoufangwu_xiaoqu like CONCAT('%',#{params.chushoufangwuXiaoqu},'%')
+            </if>
+            <if test=" params.chushoufangwuWeizhi != '' and params.chushoufangwuWeizhi != null and params.chushoufangwuWeizhi != 'null' ">
+                and chushoufangwu.chushoufangwu_weizhi like CONCAT('%',#{params.chushoufangwuWeizhi},'%')
+            </if>
+            <if test="params.chushoufangwuMianjiStart != null ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_mianji >= #{params.chushoufangwuMianjiStart}   ]]>
+            </if>
+            <if test="params.chushoufangwuMianjiEnd != null ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_mianji <= #{params.chushoufangwuMianjiEnd}   ]]>
+            </if>
+            <if test="params.chushoufangwuOldMoneyStart != null ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_old_money >= #{params.chushoufangwuOldMoneyStart}   ]]>
+            </if>
+            <if test="params.chushoufangwuOldMoneyEnd != null ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_old_money <= #{params.chushoufangwuOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.chushoufangwuNewMoneyStart != null ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_new_money >= #{params.chushoufangwuNewMoneyStart}   ]]>
+            </if>
+            <if test="params.chushoufangwuNewMoneyEnd != null ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_new_money <= #{params.chushoufangwuNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.chushoufangwuClicknumStart != null  and params.chushoufangwuClicknumStart != '' ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_clicknum >= #{params.chushoufangwuClicknumStart}   ]]>
+            </if>
+            <if test="params.chushoufangwuClicknumEnd != null  and params.chushoufangwuClicknumEnd != '' ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_clicknum <= #{params.chushoufangwuClicknumEnd}   ]]>
+            </if>
+            <if test="params.chushoufangwuClicknum != null  and params.chushoufangwuClicknum != '' ">
+                and chushoufangwu.chushoufangwu_clicknum = #{params.chushoufangwuClicknum}
+            </if>
+            <if test=" params.chushoufangwuContent != '' and params.chushoufangwuContent != null and params.chushoufangwuContent != 'null' ">
+                and chushoufangwu.chushoufangwu_content like CONCAT('%',#{params.chushoufangwuContent},'%')
+            </if>
+            <if test="params.chushoufangwuZhuangtaiTypes != null  and params.chushoufangwuZhuangtaiTypes != ''">
+                and chushoufangwu.chushoufangwu_zhuangtai_types = #{params.chushoufangwuZhuangtaiTypes}
+            </if>
+
+            <if test="params.shangxiaTypes != null  and params.shangxiaTypes != ''">
+                and chushoufangwu.shangxia_types = #{params.shangxiaTypes}
+            </if>
+
+            <if test="params.chushoufangwuDeleteStart != null  and params.chushoufangwuDeleteStart != '' ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_delete >= #{params.chushoufangwuDeleteStart}   ]]>
+            </if>
+            <if test="params.chushoufangwuDeleteEnd != null  and params.chushoufangwuDeleteEnd != '' ">
+                <![CDATA[  and chushoufangwu.chushoufangwu_delete <= #{params.chushoufangwuDeleteEnd}   ]]>
+            </if>
+            <if test="params.chushoufangwuDelete != null  and params.chushoufangwuDelete != '' ">
+                and chushoufangwu.chushoufangwu_delete = #{params.chushoufangwuDelete}
+            </if>
+                <!-- 判断用户的id不为空 -->
+            <if test=" params.yonghuIdNotNull != '' and params.yonghuIdNotNull != null and params.yonghuIdNotNull != 'null' ">
+                and a.yonghu_id IS NOT NULL
+            </if>
+            <if test=" params.yonghuName != '' and params.yonghuName != null and params.yonghuName != 'null' ">
+                and yonghu.yonghu_name like CONCAT('%',#{params.yonghuName},'%')
+            </if>
+            <if test=" params.yonghuPhone != '' and params.yonghuPhone != null and params.yonghuPhone != 'null' ">
+                and yonghu.yonghu_phone like CONCAT('%',#{params.yonghuPhone},'%')
+            </if>
+            <if test=" params.yonghuIdNumber != '' and params.yonghuIdNumber != null and params.yonghuIdNumber != 'null' ">
+                and yonghu.yonghu_id_number like CONCAT('%',#{params.yonghuIdNumber},'%')
+            </if>
+            <if test=" params.yonghuEmail != '' and params.yonghuEmail != null and params.yonghuEmail != 'null' ">
+                and yonghu.yonghu_email like CONCAT('%',#{params.yonghuEmail},'%')
+            </if>
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>

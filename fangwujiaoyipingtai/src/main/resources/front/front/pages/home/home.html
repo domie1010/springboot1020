@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <title>首页</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="author" content="order by mobanxiu.cn"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../xznstatic/css/common.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/style.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/swiper.min.css"/>
+    <script src="../../xznstatic/js/jquery-1.11.3.min.js"></script>
+    <script src="../../xznstatic/js/jquery.SuperSlide.2.1.1.js"></script>
+    <link rel="stylesheet" href="../../xznstatic/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="../../css/theme.css"/>
+</head>
+<style>
+    html::after {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+    }
+
+    #test1 {
+        overflow: hidden;
+    }
+
+    #test1 .layui-carousel-ind li {
+        width: 20px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+        background-color: #f7f7f7;
+        box-shadow: 0 0 6px rgba(255, 0, 0, .8);
+    }
+
+    #test1 .layui-carousel-ind li.layui-this {
+        width: 30px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+    }
+
+    .recommend {
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .recommend .box {
+        width: 1014px;
+    }
+
+    .recommend .box .title {
+        padding: 10px 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .recommend .box .title span {
+        padding: 0 10px;
+        line-height: 1.4;
+    }
+
+    .recommend .box .list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .index-pv1 .box .list .list-item {
+        flex: 0 0 ${var1}%;
+        padding: 0 5px;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .list .list-item-body {
+        border: 1px solid rgba(0, 0, 0, 3);
+        padding: 5px;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .recommend .box .list img {
+        width: 100%;
+        height: 100px;
+        display: block;
+        margin: 0 auto;
+        object-fit: cover;
+        max-width: 100%;
+    }
+
+    .recommend .box .list .name {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .list .list-item1 {
+        flex: 0 0 100%;
+    }
+
+    .recommend .box .list .list-item2 {
+        flex: 0 0 50%;
+    }
+
+    .recommend .box .list .list-item3 {
+        flex: 0 0 33.33%;
+    }
+
+    .recommend .box .list .list-item4 {
+        flex: 0 0 25%;
+    }
+
+    .recommend .box .list .list-item5 {
+        flex: 0 0 25%;
+    }
+
+    /* 商品推荐-样式4-开始 */
+    .recommend .list-4 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .recommend .list-4 .list-4-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recommend .list-4 .list-4-item {
+        position: relative;
+        z-index: 1;
+    }
+
+    .recommend .list-4 .list-4-item.item-1 {
+        width: 400px;
+        height: 400px;
+        margin-right: 20px;
+    }
+
+    .recommend .list-4 .list-4-item.item-2 {
+        width: 220px;
+        height: 190px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+    }
+
+    .recommend .list-4 .list-4-item.item-3 {
+        width: 220px;
+        height: 190px;
+        margin-right: 20px;
+        margin-bottom: 0;
+    }
+
+    .recommend .list-4 .list-4-item.item-4 {
+        width: 190px;
+        height: 190px;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .recommend .list-4 .list-4-item.item-5 {
+        width: 190px;
+        height: 190px;
+        margin-right: 0;
+        margin-bottom: 0;
+    }
+
+    .recommend .list-4 .list-4-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .recommend .list-4 .list-4-item .list-4-item-center {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        background-color: rgba(0, 0, 0, .3);
+    }
+
+    .recommend .list-4 .list-4-item .list-4-item-center .list-4-item-title {
+        width: 50%;
+        text-align: left;
+        line-height: 44px;
+        color: #fff;
+        font-size: 14px;
+        padding: 0 6px;
+    }
+
+    .recommend .list-4 .list-4-item .list-4-item-center .list-4-item-price {
+        width: 50%;
+        text-align: right;
+        line-height: 44px;
+        color: #fff;
+        font-size: 14px;
+        padding: 0 6px;
+    }
+
+    /* 商品推荐-样式4-结束 */
+    /* 商品推荐-样式5-开始 */
+    .recommend #recommend-five-swiper.swiper-container-horizontal > .swiper-pagination-bullets {
+        line-height: 1;
+    }
+
+    .recommend #recommend-five-swiper .swiper-slide.swiper-slide-prev {
+        z-index: 5;
+    }
+
+    .recommend #recommend-five-swiper .swiper-slide.swiper-slide-next {
+        z-index: 5;
+    }
+
+    .recommend #recommend-five-swiper .swiper-slide.swiper-slide-active {
+        z-index: 9;
+    }
+
+    .recommend #lists-five-swiper.swiper-container-horizontal > .swiper-pagination-bullets {
+        line-height: 1;
+    }
+
+    .recommend #lists-five-swiper .swiper-slide.swiper-slide-prev {
+        z-index: 5;
+    }
+
+    .recommend #lists-five-swiper .swiper-slide.swiper-slide-next {
+        z-index: 5;
+    }
+
+    .recommend #lists-five-swiper .swiper-slide.swiper-slide-active {
+        z-index: 9;
+    }
+
+    /* 商品推荐-样式5-结束 */
+
+    .news {
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        width: 100%;
+    }
+
+    .news .box {
+        width: 1014px;
+    }
+
+    .news .box .title {
+        padding: 10px 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .news .box .title span {
+        padding: 0 10px;
+        line-height: 1.4;
+    }
+
+    .news .box .list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .index-pv2 .box .list .list-item {
+        flex: 0 0 25%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .news .box .list .list-item .list-item-body {
+        border: 1px solid rgba(0, 0, 0, 3);
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+        cursor: pointer;
+    }
+
+    .news .box .list .list-item .list-item-body img {
+        width: 120px;
+        height: 100%;
+        display: block;
+        margin: 0 auto;
+        object-fit: cover;
+        max-width: 100%;
+    }
+
+    .news .box .list .list-item .list-item-body .item-info {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        padding-left: 10px;
+        box-sizing: border-box;
+    }
+
+    .news .box .list .list-item .list-item-body .item-info .name {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+
+    .news .box .list .list-item .list-item-body .item-info .time {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+
+    .news .box .list .list-item1 {
+        flex: 0 0 100%;
+    }
+
+    .news .box .list .list-item2 {
+        flex: 0 0 50%;
+    }
+
+    .news .box .list .list-item3 {
+        flex: 0 0 25%;
+    }
+
+    .lists {
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .lists .box {
+        width: 1014px;
+        overflow: hidden;
+    }
+
+    .lists .box .title {
+        padding: 10px 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .lists .box .title span {
+        padding: 0 10px;
+        line-height: 1.4;
+    }
+
+    .lists .box .swiper-slide {
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .lists .box .swiper-slide .img-box {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .lists .box .swiper-slide .img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        max-width: 100%;
+    }
+
+
+    .index-pv1 .animation-box:hover {
+        transform: perspective(1000px) translate3d(60px, 60px, 60px) scale(1.2) rotate(0) skew(0deg, 0deg);
+        transition: all 0.3s;
+        z-index: 2;
+        position: relative;
+    }
+
+    .index-pv2 .animation-box:hover {
+        transform: perspective(1000px) translate3d(60px, 60px, 60px) scale(1.2) rotate(0deg) skew(0deg, 0deg);
+        transition: all 0.3s;
+        z-index: 2;
+        position: relative;
+    }
+
+    .index-pv3 .animation-box:hover {
+        transform: perspective(1000px) translate3d(60px, 60px, 60px) scale(1.2) rotate(0deg) skew(0deg, 0deg);
+        transition: all 0.3s;
+        z-index: 2;
+        position: relative;
+    }
+
+    #new-list-6 .swiper-wrapper {
+        -webkit-transition-timing-function: linear;
+        -moz-transition-timing-function: linear;
+        -ms-transition-timing-function: linear;
+        -o-transition-timing-function: linear;
+        transition-timing-function: linear;
+    }
+</style>
+<body>
+<div id="app">
+    <div class="banner">
+        <div class="layui-carousel" id="test1"
+             :style='{"boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 auto","borderColor":"rgba(0,0,0,.3)","borderRadius":"0px","borderWidth":"0","width":"100%","borderStyle":"solid"}'>
+            <div carousel-item>
+                <div v-for="(item,index) in swiperList" :key="index">
+                    <img style="width: 100%;height: 100%;object-fit:cover;" :src="item.img"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="recommend index-pv3"
+             :style='{"padding":"10px 0 10px 0","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"10px 0 0 0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 0, 0, 0)","borderRadius":"4px","borderWidth":"0","borderStyle":"solid"}'>
+            <div class="box" style='width:80%'>
+ <div class="title main_color"
+      :style='{"padding":"10px 0 10px 0","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"10px 0 10px 0","backgroundColor":"#f7f7f7","borderRadius":"32px","alignItems":"center","borderWidth":"0 10px","fontSize":"20px","borderStyle":"solid"}'>
+         <span>DATA SHOW</span>
+     <span>租房展示</span>
+ </div>
+                    <section style="margin: 10px">
+                        <div class="row">
+                            <div v-for="(item,index) in zufangList" class="col-md-3">
+                                <div class="gallery-demo" @click="jumpCheck('../zufang/detail.html?id='+item.id , item.aaaaaaaaaa == null?'':item.aaaaaaaaaa , item.shangxiaTypes == null?'':item.shangxiaTypes)">
+                                    <img :src="item.zufangPhoto?item.zufangPhoto.split(',')[0]:''" style="height: 350px;width:100%;"/>
+                                    <h4 class="p-mask">{{item.zufangName}}
+                                        <span v-if="item.zufangNewMoney"> - ￥{{item.zufangNewMoney}}</span>
+                                        <span v-else> - {{item.zufangValue}}</span>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                <div class="clear"></div>
+                <div style="text-align: center;">
+                    <button @click="jump('../zufang/list.html')" style="display: block;cursor: pointer;" type="button"
+                            :style='{"padding":"0 15px","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"4px auto","borderColor":"#ccc","backgroundColor":"#fff","color":"rgba(160, 67, 26, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","fontSize":"14px","borderStyle":"solid","height":"34px"}'>
+                        查看更多<i v-if="true"
+                               :style='{"isshow":true,"padding":"0 0 0 1px","fontSize":"14px","color":"rgba(160, 67, 26, 1)"}'
+                               class="layui-icon layui-icon-next"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="recommend index-pv3"
+             :style='{"padding":"10px 0 10px 0","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"10px 0 0 0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 0, 0, 0)","borderRadius":"4px","borderWidth":"0","borderStyle":"solid"}'>
+            <div class="box" style='width:80%'>
+ <div class="title main_color"
+      :style='{"padding":"10px 0 10px 0","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"10px 0 10px 0","backgroundColor":"#f7f7f7","borderRadius":"32px","alignItems":"center","borderWidth":"0 10px","fontSize":"20px","borderStyle":"solid"}'>
+         <span>DATA SHOW</span>
+     <span>出售房屋展示</span>
+ </div>
+                    <section style="margin: 10px">
+                        <div class="row">
+                            <div v-for="(item,index) in chushoufangwuList" class="col-md-3">
+                                <div class="gallery-demo" @click="jumpCheck('../chushoufangwu/detail.html?id='+item.id , item.aaaaaaaaaa == null?'':item.aaaaaaaaaa , item.shangxiaTypes == null?'':item.shangxiaTypes)">
+                                    <img :src="item.chushoufangwuPhoto?item.chushoufangwuPhoto.split(',')[0]:''" style="height: 350px;width:100%;"/>
+                                    <h4 class="p-mask">{{item.chushoufangwuName}}
+                                        <span v-if="item.chushoufangwuNewMoney"> - ￥{{item.chushoufangwuNewMoney}}</span>
+                                        <span v-else> - {{item.chushoufangwuValue}}</span>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                <div class="clear"></div>
+                <div style="text-align: center;">
+                    <button @click="jump('../chushoufangwu/list.html')" style="display: block;cursor: pointer;" type="button"
+                            :style='{"padding":"0 15px","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"4px auto","borderColor":"#ccc","backgroundColor":"#fff","color":"rgba(160, 67, 26, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","fontSize":"14px","borderStyle":"solid","height":"34px"}'>
+                        查看更多<i v-if="true"
+                               :style='{"isshow":true,"padding":"0 0 0 1px","fontSize":"14px","color":"rgba(160, 67, 26, 1)"}'
+                               class="layui-icon layui-icon-next"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="news index-pv2" style="display: flex;justify-content: center;width:100%"
+            :style='{"padding":"10px 0 10px 0","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"10px 0 0 0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 0, 0, 0)","borderRadius":"0","borderWidth":"0","borderStyle":"solid"}'>
+            <div class="box" style='width:80%'>
+ <div class="title main_color"
+      :style='{"padding":"10px 0 10px 0","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"10px 0 10px 0","backgroundColor":"#f7f7f7","borderRadius":"32px","alignItems":"center","borderWidth":"0 10px","fontSize":"20px","borderStyle":"solid"}'>
+         <span>DATA SHOW</span>
+     <span>公告展示</span>
+ </div>
+                <div v-if="gonggaoList.length" class="new-list-6" style="display: flex;">
+                    <div class="swiper-container" id="new-list-6"
+                         :style='{"padding":"0","boxShadow":"0 0 0px rgba(0,0,0, .3)","margin":"0","backgroundColor":"var(--publicSubColor)","borderRadius":"0","borderWidth":"0","width":"60%","borderStyle":"solid","height":"250px"}'>
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide animation-box" v-for="(item,index) in gonggaoList" v-if="index<5"
+                                 :key="index" @click="jump('../gonggao/detail.html?id='+item.id)">
+                                <img :style='{"padding":"6px","boxShadow":"0 0 0px rgba(0,0,0, .3)","backgroundColor":"var(--publicSubColor)","borderRadius":"20px","borderWidth":"0","width":"100%","borderStyle":"solid","height":"100%"}'
+                                     style="object-fit: cover;width: 100%;height: 100%;box-sizing: border-box;"
+                                     :src="item.gonggaoPhoto">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="new6-list" style="width: 40%;"
+                         :style='{"padding":"10px","boxShadow":"0 0 6px rgba(0,0,0, .3)","margin":"0","borderColor":"#ccc","backgroundColor":"var(--publicSubColor)","overflow":"hidden","borderRadius":"0","borderWidth":"0","width":"40%","boxSizing":"border-box","borderStyle":"solid","height":"250px"}'>
+                        <div class="gonggao-title-box"
+                             style="display: flex;justify-content: space-between;align-items: center;">
+                            <div class="new-title"
+                                 :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(0,0,0,.3)","margin":"0","borderColor":"#ccc","backgroundColor":"rgba(43,135,33,0)","color":"#fff","borderRadius":"0","borderWidth":"0","width":"auto","lineHeight":"28px","fontSize":"14px","borderStyle":"solid"}'>
+                                最新动态
+                            </div>
+                        </div>
+                        <div v-for="(item,index) in gonggaoList" v-if="index<5" :key="index"
+                             @click="jump('../gonggao/detail.html?id='+item.id)" class="new6-list-item"
+                             style="display: flex;box-sizing: border-box;" style="box-sizing: border-box;"
+                             :style='{"padding":"0 10px","boxShadow":"0 0 3px rgba(0,0,0,0)","margin":"0 0 5px 0","borderColor":"#ccc","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","width":"100%","borderStyle":"solid","height":"auto"}'>
+                            <div class="new6-list-item-title"
+                                 :style='{"padding":"0","boxShadow":"0 0 0px rgba(0,0,0,0)","margin":"0","borderColor":"#ccc","backgroundColor":"rgba(0,0,0,0)","color":"var(--publicSubColor)","textAlign":"left","borderRadius":"0","borderWidth":"0","width":"70%","lineHeight":"28px","fontSize":"14px","borderStyle":"solid"}'>
+                                {{ item.gonggaoName }}
+                            </div>
+                            <div class="new6-list-item-time"
+                                 :style='{"padding":"0","boxShadow":"0 0 6px rgba(0,0,0,0)","margin":"0","borderColor":"#ccc","backgroundColor":"rgba(0,0,0,0)","color":"rgba(153, 153, 153, 1)","textAlign":"right","borderRadius":"0","borderWidth":"0","width":"30%","lineHeight":"28px","fontSize":"12px","borderStyle":"solid"}'>
+                                {{ item.insertTime }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div style="text-align: center;">
+                    <button @click="jump('../gonggao/list.html')" style="display: block;cursor: pointer;" type="button"
+                        :style='{"padding":"0 15px","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"4px auto","borderColor":"#ccc","backgroundColor":"#fff","color":"rgba(160, 67, 26, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","fontSize":"14px","borderStyle":"solid","height":"34px"}'>
+                    查看更多
+                        <i v-if="true" :style='{"isshow":true,"padding":"0 0 0 1px","fontSize":"14px","color":"rgba(160, 67, 26, 1)"}' class="layui-icon layui-icon-next"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../../xznstatic/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/vue.js"></script>
+<!-- 引入element组件库 -->
+<script src="../../xznstatic/js/element.min.js"></script>
+<!-- 引入element样式 -->
+<link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+<script src="../../xznstatic/js/swiper.min.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../modules/config.js"></script>
+<script src="../../js/utils.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            swiperList: [],
+            // dianyingRecommend: [],
+            zufangList: [],
+            chushoufangwuList: [],
+            gonggaoList: [],
+        },
+        filters: {
+            newsDesc: function (val) {
+                if (val) {
+                    val = val.replace(/<[^<>]+>/g, '').replace(/undefined/g, '');
+                    if (val.length > 60) {
+                        val = val.substring(0, 60);
+                    }
+
+                    return val;
+                }
+                return '';
+            }
+        },
+        methods: {
+            jump(url) {
+                jump(url)
+            }
+            ,jumpCheck(url,check1,check2) {
+                if(check1 == "2" || check1 == 2){//级联表的逻辑删除字段[1:未删除 2:已删除]
+                    layui.layer.msg("已经被删除", {
+                        time: 2000,
+                        icon: 2
+                    });
+                    return false;
+                }
+                if(check2 == "2"  || check2 == 2){//是否下架[1:上架 2:下架]
+                    layui.layer.msg("已经下架", {
+                        time: 2000,
+                        icon: 2
+                    });
+                    return false;
+                }
+                this.jump(url);
+            }
+        }
+    });
+
+    layui.use(['layer', 'form', 'element', 'carousel', 'http', 'jquery'], function () {
+        var layer = layui.layer;
+        var element = layui.element;
+        var form = layui.form;
+        var carousel = layui.carousel;
+        var http = layui.http;
+        var jquery = layui.jquery;
+
+        // 获取轮播图 数据
+        http.request('config/list', 'get', {
+            page: 1,
+            limit: 5
+        }, function (res) {
+            if (res.data.list.length > 0) {
+                let swiperList = [];
+                res.data.list.forEach(element => {
+                    if(element.value != null
+            )
+                {
+                    swiperList.push({
+                        img: element.value
+                    });
+                }
+            })
+                ;
+
+                vue.swiperList = swiperList;
+
+                vue.$nextTick(() => {
+                    carousel.render({
+                    elem: '#test1',
+                    width: '100%',
+                    height: '450px',
+                    arrow: 'hover',
+                    anim: 'default',
+                    autoplay: 'true',
+                    interval: '3000',
+                    indicator: 'inside'
+                });
+
+            })
+
+                // vue.$nextTick(()=>{
+                //   window.xznSlide();
+                // });
+            }
+        });
+
+        http.request('zufang/list', 'get', {
+            page: 1,
+            limit: 8,
+            shangxiaTypes: 1,
+            zufangDelete: 1,
+        }, function (res) {
+            vue.zufangList = res.data.list;
+            let flag = 6;
+            let options = {
+                "navigation": {"nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev"},
+                "slidesPerView": 5,
+                "loop": true,
+                "spaceBetween": 20,
+                "autoplay": {"delay": 3000, "disableOnInteraction": false}
+            }
+            options.pagination = {el: 'null'}
+            if (flag == 3) {
+                vue.$nextTick(() => {
+                    new Swiper('#newsnews', options)
+                })
+            }
+            if (flag == 6) {
+                let sixSwiper = {
+                    loop: true,
+                    speed: 2500,
+                    slidesPerView: 3,
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    watchSlidesProgress: true,
+                    autoplay: {
+                        delay: 0,
+                        stopOnLastSlide: false,
+                        disableOnInteraction: false
+                    }
+                }
+
+                vue.$nextTick(() => {
+                    new Swiper('#new-list-6', sixSwiper)
+                })
+            }
+
+        });
+        http.request('chushoufangwu/list', 'get', {
+            page: 1,
+            limit: 8,
+            shangxiaTypes: 1,
+            chushoufangwuDelete: 1,
+        }, function (res) {
+            vue.chushoufangwuList = res.data.list;
+            let flag = 6;
+            let options = {
+                "navigation": {"nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev"},
+                "slidesPerView": 5,
+                "loop": true,
+                "spaceBetween": 20,
+                "autoplay": {"delay": 3000, "disableOnInteraction": false}
+            }
+            options.pagination = {el: 'null'}
+            if (flag == 3) {
+                vue.$nextTick(() => {
+                    new Swiper('#newsnews', options)
+                })
+            }
+            if (flag == 6) {
+                let sixSwiper = {
+                    loop: true,
+                    speed: 2500,
+                    slidesPerView: 3,
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    watchSlidesProgress: true,
+                    autoplay: {
+                        delay: 0,
+                        stopOnLastSlide: false,
+                        disableOnInteraction: false
+                    }
+                }
+
+                vue.$nextTick(() => {
+                    new Swiper('#new-list-6', sixSwiper)
+                })
+            }
+
+        });
+        http.request('gonggao/list', 'get', {
+            page: 1,
+            limit: 8,
+        }, function (res) {
+            vue.gonggaoList = res.data.list;
+            let flag = 6;
+            let options = {
+                "navigation": {"nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev"},
+                "slidesPerView": 5,
+                "loop": true,
+                "spaceBetween": 20,
+                "autoplay": {"delay": 3000, "disableOnInteraction": false}
+            }
+            options.pagination = {el: 'null'}
+            if (flag == 3) {
+                vue.$nextTick(() => {
+                    new Swiper('#newsnews', options)
+                })
+            }
+            if (flag == 6) {
+                let sixSwiper = {
+                    loop: true,
+                    speed: 2500,
+                    slidesPerView: 3,
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    watchSlidesProgress: true,
+                    autoplay: {
+                        delay: 0,
+                        stopOnLastSlide: false,
+                        disableOnInteraction: false
+                    }
+                }
+
+                vue.$nextTick(() => {
+                    new Swiper('#new-list-6', sixSwiper)
+                })
+            }
+
+        });
+
+
+
+    });
+
+    window.xznSlide = function () {
+        // jQuery(".banner").slide({mainCell:".bd ul",autoPlay:true,interTime:5000});
+        jQuery("#ifocus").slide({
+            titCell: "#ifocus_btn li",
+            mainCell: "#ifocus_piclist ul",
+            effect: "leftLoop",
+            delayTime: 200,
+            autoPlay: true,
+            triggerTime: 0
+        });
+        jQuery("#ifocus").slide({titCell: "#ifocus_btn li", mainCell: "#ifocus_tx ul", delayTime: 0, autoPlay: true});
+        jQuery(".product_list").slide({
+            mainCell: ".bd ul",
+            autoPage: true,
+            effect: "leftLoop",
+            autoPlay: true,
+            vis: 5,
+            trigger: "click",
+            interTime: 4000
+        });
+    };
+</script>
+<script src="../../xznstatic/js/index.js"></script>
+</body>
+</html>

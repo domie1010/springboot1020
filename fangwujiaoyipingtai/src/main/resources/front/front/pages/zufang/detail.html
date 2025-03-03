@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>租房详情页</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <!-- 样式 -->
+    <link rel="stylesheet" href="../../css/style.css"/>
+    <!-- 主题（主要颜色设置） -->
+    <link rel="stylesheet" href="../../css/theme.css"/>
+    <!-- 通用的css -->
+    <link rel="stylesheet" href="../../css/common.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/bootstrap.min.css">
+</head>
+<style>
+    html::after {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+    }
+
+    #swiper {
+        overflow: hidden;
+    }
+
+    #swiper .layui-carousel-ind li {
+        width: 16px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 3px;
+        background-color: #f7f7f7;
+        box-shadow: 0 0 6px rgba(255, 0, 0, .8);
+    }
+
+    #swiper .layui-carousel-ind li.layui-this {
+        width: 26px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+        box-shadow: 0 0 6px rgba(255, 0, 0, .8);
+    }
+
+    input#buynumber::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input#buynumber[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .message-container {
+        width: 100%
+    }
+
+    .data-detail {
+        padding-bottom: 20px;
+    }
+
+    .data-detail .layui-breadcrumb a.first {
+        color: rgba(14, 14, 14, 1) !important;
+    }</style>
+<body>
+
+    <div id="app">
+        <div class="data-detail">
+            <div class="sub_backgroundColor data-detail-breadcrumb" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"20px auto","borderColor":"rgba(135, 206, 250, 1)","borderRadius":"4px","borderWidth":"0","borderStyle":"solid","height":"54px"}'>
+                <span class="layui-breadcrumb">
+                    <a class="first" :style='{"padding":"8px 10px","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0 5px","borderColor":"rgba(255,0,0,.3)","backgroundColor":"rgba(255, 255, 255, 0)","color":"rgba(14, 14, 14, 1)","borderRadius":"0","borderWidth":"0","fontSize":"16px","borderStyle":"solid"}' href="../home/home.html">
+                        首页
+                    </a>
+                    <a>
+                        <cite :style='{"padding":"8px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 15px","borderColor":"rgba(255,0,0,.3)","backgroundColor":"rgba(255, 255, 255, 0)","color":"rgba(129, 84, 118, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"16px","borderStyle":"solid"}'>
+                            {{title}}
+                        </cite>
+                    </a>
+                </span>
+                        <a v-if='storeupFlag' class="main_backgroundColor" :style='{"padding":"0 12px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(255,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"16px","lineHeight":"34px","borderStyle":"solid"}' @click="addZufangCollection()" href="javascript:void(0)">
+                    <i class="layui-icon" style="font-size: 20px;color: red;" v-if='true' :style='{"color":"rgba(255, 255, 255, 1)","padding":"0 2px 0 0","fontSize":"18px"}'>&#xe67a;</i>取消收藏
+                </a>
+                <a v-if='!storeupFlag' class="main_backgroundColor" :style='{"padding":"0 12px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(255,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"16px","lineHeight":"34px","borderStyle":"solid"}' @click="addZufangCollection()" href="javascript:void(0)">
+                    <i class="layui-icon" style="font-size: 20px;color: red;" v-if='true' :style='{"color":"rgba(255, 255, 255, 1)","padding":"0 2px 0 0","fontSize":"18px"}'>&#xe67b;</i>点我收藏
+                </a>
+            </div>
+            <div class="layui-row" style="display: flex">
+                <div class="layui-col-md5" style="width:420px">
+                    <div class="layui-carousel " id="swiper" :style='{"boxShadow":"0 0 2px rgba(160, 67, 26, 1)","margin":"0 auto","borderColor":"rgba(0,0,0,.3)","borderRadius":"6px","borderWidth":"0","width":"420px","borderStyle":"solid","height":"400px"}'>
+                        <div carousel-item>
+                            <div v-if="swiperList.length" v-for="(item,index) in swiperList" :key="index">
+                                <img style="width: 100%;height: 100%;object-fit:cover;" :src="item"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-col-md7 sub_borderColor" style="padding-left: 20px;flex: 1;" :style='{"padding":"0","boxShadow":"0 0 0px rgba(255,0,0,0)","margin":"0 0 0 20px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"1px","borderStyle":"solid"}'>
+                <h1 style="position: relative;" :style='{"padding":"10px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(160, 67, 26, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"0","textAlign":"center","borderWidth":"0px","fontSize":"18px","borderStyle":"solid"}' class="title">
+                    {{title}}
+                </h1>
+                    <div v-if="detail.zufangUuidNumber" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            房屋编号：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangUuidNumber}}
+                        </span>
+                    </div>
+                    <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            出租房屋类型：
+                        </span>
+                        <span class="desc" style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' >
+                            {{detail.zufangValue}}
+                        </span>
+                    </div>
+                    <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            区域：
+                        </span>
+                        <span class="desc" style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' >
+                            {{detail.quyuValue}}
+                        </span>
+                    </div>
+                    <div v-if="detail.zufangXiaoqu" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            所在小区：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangXiaoqu}}
+                        </span>
+                    </div>
+                    <div v-if="detail.zufangWeizhi" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            所在详细位置：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangWeizhi}}
+                        </span>
+                    </div>
+                    <div v-if="detail.zufangMianji" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            房屋面积：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangMianji}}
+                        </span>
+                    </div>
+                    <div v-if="detail.zufangOldMoney" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            原价/月：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangOldMoney}}
+                        </span>
+                    </div>
+                    <div v-if="detail.zufangNewMoney" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            现加/月：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangNewMoney}}
+                        </span>
+                    </div>
+                    <div v-if="detail.zufangClicknum" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            房屋热度：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.zufangClicknum}}
+                        </span>
+                    </div>
+                    <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            房屋状态：
+                        </span>
+                        <span class="desc" style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' >
+                            {{detail.zufangZhuangtaiValue}}
+                        </span>
+                    </div>
+                    <!--<div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <button style="height:auto;" :style='{"padding":"0","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(244, 121, 131, 1)","color":"#666","borderRadius":"4px 0 0 4px","borderWidth":"1px","width":"34px","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="button" @click="buyNumber>0?buyNumber&#45;&#45;:buyNumber" class="layui-btn layui-btn-primary">
+                            -
+                        </button>
+                        <input style="text-align:center;padding:10px 20px;width:300px;" :style='{"padding":"0","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 242, 223, 1)","color":"rgba(255, 45, 81, 1)","borderRadius":"0","borderWidth":"1px 0","width":"44px","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="number" v-model="buyNumber" id="buyNumber" name="buyNumber" class="layui-input" disabled="disabled" />
+                        <button style="height:auto;" :style='{"padding":"0","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(68, 206, 246, 1)","color":"#666","borderRadius":"0 4px 4px 0","borderWidth":"1px","width":"34px","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="button" @click="buyNumber++" class="layui-btn layui-btn-primary">
+                            +
+                        </button>
+                        <button @click="addZufangOrder()" style="height:auto;" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 5px","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(23, 124, 176, 1)","color":"rgba(255, 255, 255, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","lineHeight":"40px","fontSize":"16px","borderStyle":"solid"}' type="button" class="layui-btn btn-submit">
+                            立即购买
+                        </button>
+                    </div>-->
+                    <div v-if="detail.zufangZhuangtaiTypes==1" style="padding: 20px;border: 0px solid #f2f2f2;margin-top: 20px;display: flex">
+                        <div class="num-picker">
+                            <button @click="zufangYuyue()" style="height:auto;" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 5px","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(23, 124, 176, 1)","color":"rgba(255, 255, 255, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","lineHeight":"40px","fontSize":"16px","borderStyle":"solid"}' type="button" class="layui-btn btn-submit">
+                                立即预约看房
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                
+            <div class="layui-row detail-tab">
+                <div class="layui-tab layui-tab-card main_borderColor" :style='{"backgroundColor":"#fff","borderRadius":"10px","borderStyle":"solid","borderWidth":"1px"}' style="overflow: hidden;">
+                    <ul class="layui-tab-title main_color" :style='{"backgroundColor":"#f2f2f2","fontSize":"14px"}'>
+                        <li class="layui-this">详情</li>
+                        <li>留言</li>
+                    </ul>
+
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div v-html="myFilters(detail.zufangContent)"></div>
+                        </div>
+
+                        <div class="layui-tab-item">
+                            <div class="message-container">
+                                <form class="layui-form message-form" :style='{"padding":"20px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 0 20px 0","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","borderRadius":"10px","borderWidth":"0","borderStyle":"solid"}'>
+                                    <div class="layui-form-item layui-form-text" style="display: flex;align-items: center;margin:0">
+                                        <label style="width: auto;" :style='{"padding":"0","minWidth":"54px","fontSize":"14px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                                            留言
+                                        </label>
+                                        <div class="layui-input-block" style="margin:0;flex:1;">
+                                            <textarea class="main_borderColor layui-textarea" :style='{"padding":"10px","backgroundColor":"#fff","color":"rgba(135, 206, 250, 1)","borderRadius":"10px","borderWidth":"1px","fontSize":"14px","borderStyle":"solid","height":"120px"}' id="zufangLiuyanText" required lay-verify="required" placeholder="留言内容"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <button lay-submit lay-filter="zufangLiuyanText" class="layui-btn btn-submit main_backgroundColor" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"10px 5px 0","borderColor":"rgba(0,0,0,.3)","color":"rgba(95, 89, 89, 1)","borderRadius":"4px","borderWidth":"0","width":"auto","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' >
+                                                立即提交
+                                            </button>
+                                            <button class="layui-btn layui-btn-primary sub_backgroundColor" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"10px 5px 0","borderColor":"rgba(0,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","width":"auto","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="reset">
+                                                重置
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="message-list" :style='{"padding":"0 20px 20px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0","borderColor":"#92d289","backgroundColor":"#fff","borderRadius":"4px","borderWidth":"0","borderStyle":"solid"}'>
+                                    <div v-for="(item,index) in zufangLiuyanDataList" v-bind:key="index" :style='{"padding":"20px 0","boxShadow":"0 0 0px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}' class="message-item">
+                                        <div class="username-container">
+                                            <img :src="item.yonghuPhoto" :style='{"boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 10px 0 0","borderColor":"rgba(0,0,0,.3)","borderRadius":"50%","borderWidth":"0","width":"40px","borderStyle":"solid","height":"40px"}' class="avator">
+                                            <span style="display: inline-block;" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"#fff","color":"rgba(6, 82, 121, 1)","borderRadius":"4px","borderWidth":"0","width":"auto","lineHeight":"28px","fontSize":"14px","borderStyle":"solid"}' class="username">
+                                                {{item.yonghuName}}
+                                            </span>
+                                        </div>
+                                        <div class="content" style="margin: 0;flex: 1;">
+                                            <span class="message main_color" style="display: inline-block;" :style='{"padding":"8px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"8px 0 0 50px","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 0, 0, 0)","borderRadius":"4px","borderWidth":"0","fontSize":"14px","borderStyle":"solid"}'>
+                                                留言:{{item.zufangLiuyanText}}
+                                            </span>
+                                        </div>
+                                        <div v-if="item.replyText" class="content" style="margin: 0;flex: 1;">
+                                            <span class="message sub_color" style="display: inline-block;" :style='{"padding":"8px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"8px 0 0 50px","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 0, 0, 0)","borderRadius":"4px","borderWidth":"0","fontSize":"14px","borderStyle":"solid"}'>
+                                                回复:{{item.replyText}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pager" id="zufangLiuyanPager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    </div>
+
+
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/vue.js"></script>
+    <!-- 引入element组件库 -->
+    <script src="../../xznstatic/js/element.min.js"></script>
+    <!-- 引入element样式 -->
+    <link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+    <!-- 组件配置信息 -->
+    <script src="../../js/config.js"></script>
+    <!-- 扩展插件配置信息 -->
+    <script src="../../modules/config.js"></script>
+    <!-- 工具方法 -->
+    <script src="../../js/utils.js"></script>
+
+    <script>
+        Vue.prototype.myFilters= function (msg) {
+            if(msg != null){
+                return msg.replace(/\n/g, "<br>");
+            }else{
+                return "";
+            }
+        };
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                // 轮播图
+                swiperList: [],
+                // 数据详情
+                detail: {
+                    id: 0
+                },
+                // 商品标题
+                title: '',
+                totalScore: 0,//评分
+
+                storeupFlag: 0,//收藏 [0为收藏 1已收藏]
+                //系统推荐
+                zufangRecommendList: [],
+    <!-- 是订单并且非座位才有购物车 -->
+                // 加入购物车数量
+                buyNumber: 1,
+                // 当前详情页表
+                detailTable: 'zufang',
+                // 留言列表
+                zufangLiuyanDataList: [],
+            },
+            methods: {
+                jump(url) {
+                    jump(url)
+                },
+                isAuth(tablename, button) {
+                    return isFrontAuth(tablename, button)
+                },
+                //预约
+                zufangYuyue(){
+                    let _this = this;
+                    localStorage.setItem('zufangId', _this.detail.id);
+                    _this.jump("../zufangOrder/add.html");
+
+                    /*let data={
+                        zufangId:_this.detail.id,
+                        yonghuId:localStorage.getItem("userid"),
+                        zufangOrderYesnoTypes:1,
+                    }
+                    // 提交数据
+                    layui.http.requestJson('zufangOrder/add', 'post', data, function (res) {
+                        if(res.code == 0) {
+                            layui.layer.msg('预约成功', {
+                                time: 2000,
+                                icon: 6
+                            }, function () {
+                                _this.jump("../zufangOrder/list.html");
+                            });
+                        }else{
+                            layui.layer.msg(res.msg, {
+                                time: 5000,
+                                icon: 5
+                            });
+                        }
+                    });*/
+                },
+                // 收藏商品
+                addZufangCollection() {
+                    let _this = this;
+                    layui.http.request('zufangCollection/list', 'get', {
+                        page: 1,
+                        limit: 1,
+                        zufangId: _this.detail.id,
+                        zufangCollectionTypes: 1,
+                        yonghuId: localStorage.getItem('userid'),
+                    }, (res) => {
+                        if (res.data.list.length == 1) {
+                            layui.http.requestJson('zufangCollection/delete', 'post', [res.data.list[0].id], function (res) {
+                                layui.layer.msg('取消成功', {
+                                    time: 1000,
+                                    icon: 5
+                                }, function () {
+                                    window.location.reload();
+                                });
+                            });
+                            return false;
+                        }
+                        layui.http.requestJson('zufangCollection/add', 'post', {
+                            yonghuId: localStorage.getItem('userid'),
+                            zufangId: _this.detail.id,
+                            zufangCollectionTypes: 1,
+                        }, function (res) {
+                            layui.layer.msg('收藏成功', {
+                                time: 1000,
+                                icon: 6
+                            }, function () {
+                                window.location.reload();
+                            });
+                        });
+                    });
+                },
+                // 立即购买
+                addZufangOrder() {
+                    localStorage.setItem("buyNumber",this.buyNumber);
+                    localStorage.setItem("zufangId",this.detail.id);
+                    jump('../zufangOrder/add.html');
+                },
+
+                }
+        });
+
+        layui.use(['layer', 'form', 'element', 'carousel', 'http', 'jquery', 'laypage', 'util'], function () {
+            var layer = layui.layer;
+            var util = layui.util;
+            var element = layui.element;
+            var form = layui.form;
+            var carousel = layui.carousel;
+            var http = layui.http;
+            var jquery = layui.jquery;
+            var laypage = layui.laypage;
+
+            var limit = 10;
+
+            // 数据ID
+            var id = http.getParam('id');
+            vue.detail.id = id;
+            // 数据信息
+            http.request(`${vue.detailTable}/detail/` + id, 'get', {}, function (res) {
+                // 详情信息
+                vue.detail = res.data;
+                vue.title = vue.detail.zufangName;
+                // 轮播图片
+                vue.swiperList = vue.detail.zufangPhoto ? vue.detail.zufangPhoto.split(",") : [];
+                // 轮播图
+                vue.$nextTick(() => {
+                    carousel.render({
+                        elem: '#swiper',
+                        width: '420px',
+                        height: '400px',
+                        arrow: 'hover',
+                        anim: 'default',
+                        autoplay: 'true',
+                        interval: '3000',
+                        indicator: 'inside'
+                    });
+                });
+
+            });
+
+
+            // 系统推荐
+            http.request(`zufang/list`, 'get', {
+                page: 1,
+                limit: 5,
+                zufangTypes: vue.detail.zufangTypes,
+                zufangDelete: 1,
+                quyuTypes: vue.detail.quyuTypes,
+                zufangZhuangtaiTypes: vue.detail.zufangZhuangtaiTypes,
+                shangxiaTypes: vue.detail.shangxiaTypes,
+            }, function (res) {
+                vue.zufangRecommendList = res.data.list;
+            });
+
+            if (localStorage.getItem('userid')) {
+                http.request('zufangCollection/list', 'get', {
+                    page: 1,
+                    limit: 1,
+                    zufangId: vue.detail.id,
+                    yonghuId: localStorage.getItem('userid'),
+                }, function (res) {
+                    if(res.data.total >0){
+                        res.data.list.forEach(element => {
+                            if (element.zufangCollectionTypes == 1) {
+                                vue.storeupFlag = 1;
+                            }
+                            if (element.zufangCollectionTypes == 2) {
+                                vue.zanFlag = 1;
+                            }
+                            if (element.zufangCollectionTypes == 3) {
+                                vue.caiFlag = 1;
+                            }
+                        });
+
+                    }
+                });
+            }
+
+            // 获取留言
+            http.request(`${vue.detailTable}Liuyan/list`, 'get', {
+                page: 1,
+                limit: limit,
+                zufangId: vue.detail.id
+            }, function (res) {
+                vue.zufangLiuyanDataList = res.data.list;
+                // 分页
+                laypage.render({
+                    elem: 'zufangLiuyanPager',
+                    count: res.data.total,
+                    limit: limit,
+                    jump: function (obj, first) {
+                        //首次不执行
+                        if (!first) {
+                            http.request(`${vue.detailTable}Liuyan/list`, 'get', {
+                                page: obj.curr,
+                                limit: obj.limit,
+                                zufangId: vue.detail.id
+                            }, function (res) {
+                                vue.zufangLiuyanDataList = res.data.list
+                            })
+                        }
+                    }
+                });
+            });
+
+            // 提交留言
+            form.on('submit(zufangLiuyanText)', function (data) {
+                data.yonghuId = localStorage.getItem('userid');
+                data.tableName = localStorage.getItem('userTable');
+                data.zufangLiuyanText =jquery("#zufangLiuyanText").val();
+                if(data.zufangLiuyanText == null || data.zufangLiuyanText == ''){
+                    layer.msg("留言不能为空", {
+                        time: 2000,
+                        icon: 2
+                    });
+                    return false;
+                }
+                data.zufangId = vue.detail.id;
+                http.requestJson(`${vue.detailTable}Liuyan/add`, 'post', data, function (res) {
+                    layer.msg('留言成功', {
+                        time: 2000,
+                        icon: 6
+                    }, function () {
+                        window.location.reload();
+                    });
+                    return false;
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>
